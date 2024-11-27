@@ -71,13 +71,105 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+###-begin-npm-completion-###
+#
+# npm command completion script
+#
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+#
+
+if type complete &>/dev/null; then
+  _npm_completion () {
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+    if ! IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           npm completion -- "${words[@]}" \
+                           2>/dev/null)); then
+      local ret=$?
+      IFS="$si"
+      return $ret
+    fi
+    IFS="$si"
+    if type __ltrim_colon_completions &>/dev/null; then
+      __ltrim_colon_completions "${words[cword]}"
+    fi
+  }
+  complete -o default -F _npm_completion npm
+elif type compdef &>/dev/null; then
+  _npm_completion() {
+    local si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 npm completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _npm_completion npm
+elif type compctl &>/dev/null; then
+  _npm_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    if ! IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       npm completion -- "${words[@]}" \
+                       2>/dev/null)); then
+
+      local ret=$?
+      IFS="$si"
+      return $ret
+    fi
+    IFS="$si"
+  }
+  compctl -K _npm_completion npm
+fi
+###-end-npm-completion-###
+#compdef cli.js
+###-begin-cli.js-completions-###
+#
+# yargs command completion script
+#
+# Installation: .//Users/daniel/Library/pnpm/global/5/node_modules/hrvst-cli/dist/cli.js completion >> ~/.zshrc
+#    or .//Users/daniel/Library/pnpm/global/5/node_modules/hrvst-cli/dist/cli.js completion >> ~/.zprofile on OSX.
+#
+_cli.js_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" .//Users/daniel/Library/pnpm/global/5/node_modules/hrvst-cli/dist/cli.js --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _cli.js_yargs_completions cli.js
+###-end-cli.js-completions-###
+
+
+
+#### ALIASES ####
+
 alias reset="source ~/.zshrc"
 alias config="$EDITOR ~/.zshrc"
 
-#### HARVEST ALIASES ####
 alias h="hrvst"
 alias ha="hrvst log"
+alias hlist="hrvst users project-assignments me --fields id,client.name,project.name"
 
-
-alias p="do shell script tell application \"Flow\" to"
-alias pm="tell application \"Flow\" to getTime && tell application \"Flow\" to getPhase"
+# alias p="do shell script tell application \"Flow\" to"
+# alias pm="tell application \"Flow\" to getTime && tell application \"Flow\" to getPhase"
