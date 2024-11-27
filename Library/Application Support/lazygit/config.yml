@@ -21,7 +21,10 @@ gui:
   showRandomTip: false
 
   # If true, show the command log
-  showCommandLog: false
+  showCommandLog: true
+
+  # Height of the command log view
+  commandLogSize: 4
 
   # If true, show the bottom line that contains keybinding info and useful buttons. If false, this line will be hidden except to display a loader for an in-progress action.
   showBottomLine: false
@@ -31,7 +34,7 @@ gui:
 
   # Default size for focused window. Window size can be changed from within Lazygit with '+' and '_' (but this won't change the default).
   # One of: 'normal' (default) | 'half' | 'full'
-  windowSize: half
+  windowSize: normal
 
   # Status panel view.
   # One of 'dashboard' (default) | 'allBranchesLog'

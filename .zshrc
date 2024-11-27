@@ -129,8 +129,6 @@ alias hl="hrvst users project-assignments me --fields id,client.name,project.nam
 
 alias status="git status -s -b"
 alias lg="lazygit status"
-alias home="cd ~"
-
 
 # alias p="do shell script tell application \"Flow\" to"
 # alias pm="tell application \"Flow\" to getTime && tell application \"Flow\" to getPhase"
