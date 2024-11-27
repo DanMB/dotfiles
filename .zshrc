@@ -49,7 +49,7 @@ source $ZSH/oh-my-zsh.sh
 # else
 #   export EDITOR='nvim'
 # fi
-export EDITOR='zed'
+# export EDITOR='zed'
 
 # nvm
 # export NVM_DIR="$HOME/.nvm"
@@ -121,12 +121,16 @@ compdef _cli.js_yargs_completions cli.js
 
 #### ALIASES ####
 
-alias reset="source ~/.zshrc"
-alias config="$EDITOR ~/.zshrc"
+alias zreset="source ~/.zshrc"
+alias zconfig="$EDITOR ~/.zshrc"
 
-alias h="hrvst"
-alias ha="hrvst log"
-alias hlist="hrvst users project-assignments me --fields id,client.name,project.name"
+alias h="hrvst log"
+alias hl="hrvst users project-assignments me --fields id,client.name,project.name"
+
+alias status="git status -s -b"
+alias lg="lazygit status"
+alias home="cd ~"
+
 
 # alias p="do shell script tell application \"Flow\" to"
 # alias pm="tell application \"Flow\" to getTime && tell application \"Flow\" to getPhase"
